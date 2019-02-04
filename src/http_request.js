@@ -6,7 +6,7 @@ const querystring = require('querystring')
 const requestUrl = 'http://2captcha.com/in.php?';
 const responseUrl = 'http://2captcha.com/res.php?';
 
-// Uncomment this to track requests
+// Uncomment this to log HTTP requests
 // axios.interceptors.request.use(request => {
 //   console.log('Starting Request', request)
 //   return request
@@ -17,7 +17,18 @@ const responseUrl = 'http://2captcha.com/res.php?';
 //   return response
 // });
 
+/**
+ * Class with static methods used in HTTP requests
+ * @class
+ */
 class HTTPRequest {
+
+  /**
+   * Performs a GET to an URL and returns a promise to its body as a Buffer
+   *
+   * @param  {string} url      URL of the desired content to GET
+   * @return {Promise<Buffer>} Buffer with the content of the body from the HTTP response
+   */
   static async openDataURL(url) {
     if (typeof(url) !== 'string') throw new Error('You must inform a string URL');
 
@@ -28,11 +39,21 @@ class HTTPRequest {
     return res.data;
   }
 
+  /**
+   * Performs a request and returns a promise to the body as a string
+   *
+   * @param  {Object} options           Object with the parameters to the request
+   * @param  {string} options.url       URL of the request
+   * @param  {string} [options.method='get']  HTTP verb of the request
+   * @param  {Object} [options.payload={}] Body content of the requisition
+   * @param  {number} [options.timeout=60000] Timeout of the request in miliseconds
+   * @return {Promise<string>}
+   */
   static async request(options = {}) {
     const url = options.url;
     const method = options.method || 'get';
     const payload = options.payload || {};
-    const timeout = options.timeout || 60;
+    const timeout = options.timeout || 60000;
     let headers = {
       'User-Agent': constants.userAgent
     };

@@ -2,9 +2,10 @@
   "name": "@infosimples/node_two_captcha",
   "version": "0.0.1",
   "description": "Node.js package for easy integration with 2Captcha API (Captcha Solver as a Service)",
-  "main": "lib/two_captcha.js",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "generate_docs": "npx jsdoc -c ./jsdoc-config.json"
   },
   "keywords": [
     "api",
@@ -16,5 +17,8 @@
   "license": "MIT",
   "dependencies": {
     "axios": "^0.18.0"
+  },
+  "devDependencies": {
+    "jsdoc": "^3.5.5"
   }
 }
