@@ -15,12 +15,12 @@ class TwoCaptchaClient {
   /**
    * Constructor for the 2Captcha client object
    *
-   * @param  {string}  key                Your 2Captcha API key
-   * @param  {Object}  [params]           Params for the client
+   * @param  {string}  key                  Your 2Captcha API key
+   * @param  {Object}  [params]             Params for the client
    * @param  {number}  [params.timeout]     milliseconds before giving up on an captcha
    * @param  {number}  [params.polling]     milliseconds between polling for answer
    * @param  {Boolean} [params.throwErrors] Whether the client should throw errors or just log the errors
-   * @return {TwoCaptchaClient}           The client object
+   * @return {TwoCaptchaClient}             The client object
    */
   constructor(key, {
     timeout = 60000,
@@ -182,6 +182,21 @@ class TwoCaptchaClient {
   }
 
   /**
+   * Report incorrectly solved captcha for refund
+   *
+   * @param  {string} captchaId The id of the incorrectly solved captcha
+   * @return {Promise<Boolean>} Promise for a boolean informing if the report
+   * was received
+   */
+  async report(captchaId) {
+    let res = await this._request('res', 'get', {
+      action: 'reportbad',
+      id: captchaId
+    });
+    return res == 'OK_REPORT_RECORDED';
+  }
+
+  /**
    * Blocks the code for the specified amount of time
    *
    * @param  {number} ms          The time in milliseconds to block the code
@@ -191,6 +206,14 @@ class TwoCaptchaClient {
     return new Promise(resolve => {
       setTimeout(resolve, ms)
     });
+  }
+
+  async stats(date) {
+    let res = await this._request('res', 'get', {
+      action: 'getstats',
+      date: date.toISOString().slice(0, 10)
+    });
+    return res;
   }
 
   /**
