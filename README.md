@@ -6,6 +6,7 @@ Node TwoCaptcha is a Javascript package for 2Captcha -
 ## Installation
 
 Just run:
+
 ```bash
 npm install node_two_captcha
 ```
@@ -37,6 +38,8 @@ The first parameter of the `TwoCaptchaClient` constructor is your API key from
 
 ### 2. Solve a captcha
 
+#### Image captcha
+
 ```javascript
 client.decode({
   url: 'http://bit.ly/1xXZcKo'
@@ -64,11 +67,29 @@ The returned value will be a `Captcha` object. Its properties are:
 -   `indexes()`: If the captcha sent was tile-like, this function returns the
     indexes of the clicks on an array.
 
+#### ReCaptcha v2
+
+```javascript
+client.decodeRecaptchaV2({
+  googlekey: 'the_key_extracted from the page',
+  pageurl: 'https://www.google.com/recaptcha/api2/demo'
+}).then(function(response) {
+  console.log(response.text);
+});
+
+>jTfh3o9uqafa-u5RtYofHHo2uDk0T78f78HvttFGYft8pG3wuhd-UHAIy271bQXPeUNRm...
+```
+
+`decodeRecaptchaV2` is an async function. The parameters for `decodeRecaptchaV2`
+function are:
+
+-   `googlekey`: The google key for the ReCaptcha.
+-   `pageurl`: The URL where the ReCaptcha is.
+
 ### 3. Retrieve a previously solved captcha
 
 ```javascript
 // 61086191138 is the ID of a previously sent Captcha
-let captcha;
 client.captcha('61086191138').then(function(response){
   console.log(response);
 });
@@ -77,4 +98,40 @@ client.captcha('61086191138').then(function(response){
    _id: '61086191138',
    _apiResponse: 'OK|infosimples',
    _text: 'infosimples' }
+```
+
+### 4. Report incorrectly solved captcha for refund
+
+```javascript
+client.report('61086191138').then(function(response) {
+  console.log(response);
+});
+
+// Returns whether the report was received or not
+> true
+```
+
+> Warning: do not abuse on this method, otherwise you may get banned
+
+### 5. Get usage statistics for a specific date
+
+```javascript
+let date = new Date('2019-02-04');
+client.stats(date).then(function(response) {
+  console.log(response);
+});
+
+// Returns an XML string with your usage statistics
+> <?xml version="1.0"?><response><stats dateint="1549227600" date="2019-02-04" hour="00"><volume>0</volume><money>0</money></stats><stats dateint="1549231200" date="2019-02-04" hour="01"><volume>0</volume><money>0</money></stats>...
+```
+
+### 6. Get your 2Captcha account balance
+
+```javascript
+client.balance().then(function(response) {
+  console.log(response);
+});
+
+// Returns a float with your account balance in USD
+> 3.75371
 ```

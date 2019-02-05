@@ -15,12 +15,12 @@ class TwoCaptchaClient {
   /**
    * Constructor for the 2Captcha client object
    *
-   * @param  {string}  key                Your 2Captcha API key
-   * @param  {Object}  [params]           Params for the client
+   * @param  {string}  key                  Your 2Captcha API key
+   * @param  {Object}  [params]             Params for the client
    * @param  {number}  [params.timeout]     milliseconds before giving up on an captcha
    * @param  {number}  [params.polling]     milliseconds between polling for answer
    * @param  {Boolean} [params.throwErrors] Whether the client should throw errors or just log the errors
-   * @return {TwoCaptchaClient}           The client object
+   * @return {TwoCaptchaClient}             The client object
    */
   constructor(key, {
     timeout = 60000,
@@ -33,6 +33,18 @@ class TwoCaptchaClient {
     this.throwErrors = throwErrors;
 
     if (typeof(key) !== 'string') this._throwError('2Captcha key must be a string');
+  }
+
+  /**
+   * Get balance from your account
+   *
+   * @return {Promise<float>} Account balance in USD   
+   */
+  async balance() {
+    let res = await this._request('res', 'get', {
+      action: 'getbalance'
+    });
+    return res;
   }
 
   /**
@@ -58,7 +70,7 @@ class TwoCaptchaClient {
 
 
   /**
-   * Sends a captcha and polls for its response
+   * Sends an image captcha and polls for its response
    *
    * @param  {Object} options          Parameters for the requests
    * @param  {string} [options.base64] An already base64-coded image
@@ -66,8 +78,7 @@ class TwoCaptchaClient {
    * @param  {string} [options.path]   The path for a system-stored image
    * @param  {string} [options.url]    Url for a web-located image
    * @param  {string} [options.method] 2Captcha method of image sending. Can be either base64 or multipart
-   * @param  {Object} options          Parameters for the requests
-   * @return {Promise<Captcha>}        Promise for a captcha
+   * @return {Promise<Captcha>}        Promise for a Captcha object
    */
   async decode(options = {}) {
     let startedAt = Date.now();
@@ -93,6 +104,53 @@ class TwoCaptchaClient {
     }
 
     return decodedCaptcha;
+  }
+
+  /**
+   * Sends a ReCaptcha v2 and polls for its response
+   *
+   * @param  {Object} options           Parameters for the request
+   * @param  {string} options.googlekey The google key from the ReCaptcha
+   * @param  {string} options.pageurl   The URL where the ReCaptcha is
+   * @return {Promise<Captcha>}         Promise for a Captcha object
+   */
+  async decodeRecaptchaV2(options = {}) {
+    let startedAt = Date.now();
+
+    if (options.googlekey === '') this._throwError('Missing googlekey parameter');
+    if (options.pageurl === '') this._throwError('Missing pageurl parameter');
+
+    let upload_options = {
+      method: 'userrecaptcha',
+      googlekey: options.googlekey,
+      pageurl: options.pageurl
+    };
+
+    let decodedCaptcha = await this._upload(upload_options);
+
+    // Keep pooling untill the answer is ready
+    while (!decodedCaptcha.text) {
+      await this._sleep(Math.max(this.polling, 10)); // Sleep at least 10 seconds
+      if (Date.now() - startedAt > this.timeout) {
+        this._throwError('Captcha timeout');
+        return;
+      }
+      decodedCaptcha = await this.captcha(decodedCaptcha.id);
+    }
+
+    return decodedCaptcha;
+  }
+
+  /**
+   * @deprecated /load.php route is returning error 500
+   * Get current load from 2Captcha service
+   *
+   * @return {Promise<string>} Promise for an XML containing current load from
+   * 2Captcha service
+   */
+  async load() {
+    let res = await this._request('load', 'get');
+    return res;
   }
 
   /**
@@ -148,6 +206,21 @@ class TwoCaptchaClient {
   }
 
   /**
+   * Report incorrectly solved captcha for refund
+   *
+   * @param  {string} captchaId The id of the incorrectly solved captcha
+   * @return {Promise<Boolean>} Promise for a boolean informing if the report
+   * was received
+   */
+  async report(captchaId) {
+    let res = await this._request('res', 'get', {
+      action: 'reportbad',
+      id: captchaId
+    });
+    return res == 'OK_REPORT_RECORDED';
+  }
+
+  /**
    * Blocks the code for the specified amount of time
    *
    * @param  {number} ms          The time in milliseconds to block the code
@@ -157,6 +230,21 @@ class TwoCaptchaClient {
     return new Promise(resolve => {
       setTimeout(resolve, ms)
     });
+  }
+
+  /**
+   * Get usage statistics from your account
+   *
+   * @param  {Date} date       Date for the target day
+   * @return {Promise<string>} Promise for an XML containing statistics about
+   * target day
+   */
+  async stats(date) {
+    let res = await this._request('res', 'get', {
+      action: 'getstats',
+      date: date.toISOString().slice(0, 10)
+    });
+    return res;
   }
 
   /**
@@ -182,7 +270,7 @@ class TwoCaptchaClient {
    * @param  {Object} options        Parametes for the controlling the requistion
    * @param  {string} options.base64 The base64 encoded image
    * @param  {string} options.method 2Captcha method of image sending. Can be either base64 or multipart
-   * @return {Promise<Captcha>}               Promise for Captcha object containing the captcha ID
+   * @return {Promise<Captcha>}      Promise for Captcha object containing the captcha ID
    */
   async _upload(options = {}) {
     let args = {};
@@ -222,7 +310,7 @@ class TwoCaptchaClient {
     let message;
     if (constants.errors[body]) {
       message = constants.errors[body];
-    } else if (body === '' || body.includes('ERROR')) {
+    } else if (body === '' || body.toString().includes('ERROR')) {
       message = `Unknown 2Captcha error: ${body}`;
     } else {
       return true;
