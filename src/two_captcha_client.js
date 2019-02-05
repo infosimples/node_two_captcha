@@ -36,6 +36,18 @@ class TwoCaptchaClient {
   }
 
   /**
+   * Get balance from your account
+   *
+   * @return {Promise<float>} Account balance in USD   
+   */
+  async balance() {
+    let res = await this._request('res', 'get', {
+      action: 'getbalance'
+    });
+    return res;
+  }
+
+  /**
    * Gets the response from a solved captcha
    *
    * @param  {string} captchaId The id of the desired captcha
@@ -130,6 +142,18 @@ class TwoCaptchaClient {
   }
 
   /**
+   * @deprecated /load.php route is returning error 500
+   * Get current load from 2Captcha service
+   *
+   * @return {Promise<string>} Promise for an XML containing current load from
+   * 2Captcha service
+   */
+  async load() {
+    let res = await this._request('load', 'get');
+    return res;
+  }
+
+  /**
    * Loads a captcha image and converts to base64
    *
    * @param  {Object} options          The source of the image
@@ -208,6 +232,13 @@ class TwoCaptchaClient {
     });
   }
 
+  /**
+   * Get usage statistics from your account
+   *
+   * @param  {Date} date       Date for the target day
+   * @return {Promise<string>} Promise for an XML containing statistics about
+   * target day
+   */
   async stats(date) {
     let res = await this._request('res', 'get', {
       action: 'getstats',
@@ -279,7 +310,7 @@ class TwoCaptchaClient {
     let message;
     if (constants.errors[body]) {
       message = constants.errors[body];
-    } else if (body === '' || body.includes('ERROR')) {
+    } else if (body === '' || body.toString().includes('ERROR')) {
       message = `Unknown 2Captcha error: ${body}`;
     } else {
       return true;

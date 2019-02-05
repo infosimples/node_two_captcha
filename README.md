@@ -100,7 +100,7 @@ client.captcha('61086191138').then(function(response){
    _text: 'infosimples' }
 ```
 
-### 4. Report a wrong solution
+### 4. Report incorrectly solved captcha for refund
 
 ```javascript
 client.report('61086191138').then(function(response) {
@@ -113,9 +113,7 @@ client.report('61086191138').then(function(response) {
 
 > Warning: do not abuse on this method, otherwise you may get banned
 
-### 5. Get stats for a day
-
-Get usage statistics for a specific date
+### 5. Get usage statistics for a specific date
 
 ```javascript
 let date = new Date('2019-02-04');
@@ -123,6 +121,17 @@ client.stats(date).then(function(response) {
   console.log(response);
 });
 
-// Returns a XML string with your usage statistics
+// Returns an XML string with your usage statistics
 > <?xml version="1.0"?><response><stats dateint="1549227600" date="2019-02-04" hour="00"><volume>0</volume><money>0</money></stats><stats dateint="1549231200" date="2019-02-04" hour="01"><volume>0</volume><money>0</money></stats>...
+```
+
+### 6. Get your 2Captcha account balance
+
+```javascript
+client.balance().then(function(response) {
+  console.log(response);
+});
+
+// Returns a float with your account balance in USD
+> 3.75371
 ```
