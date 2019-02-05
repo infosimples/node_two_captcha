@@ -58,7 +58,7 @@ class TwoCaptchaClient {
 
 
   /**
-   * Sends a captcha and polls for its response
+   * Sends an image captcha and polls for its response
    *
    * @param  {Object} options          Parameters for the requests
    * @param  {string} [options.base64] An already base64-coded image
@@ -66,8 +66,7 @@ class TwoCaptchaClient {
    * @param  {string} [options.path]   The path for a system-stored image
    * @param  {string} [options.url]    Url for a web-located image
    * @param  {string} [options.method] 2Captcha method of image sending. Can be either base64 or multipart
-   * @param  {Object} options          Parameters for the requests
-   * @return {Promise<Captcha>}        Promise for a captcha
+   * @return {Promise<Captcha>}        Promise for a Captcha object
    */
   async decode(options = {}) {
     let startedAt = Date.now();
@@ -85,6 +84,41 @@ class TwoCaptchaClient {
     // Keep pooling untill the answer is ready
     while (!decodedCaptcha.text) {
       await this._sleep(this.polling);
+      if (Date.now() - startedAt > this.timeout) {
+        this._throwError('Captcha timeout');
+        return;
+      }
+      decodedCaptcha = await this.captcha(decodedCaptcha.id);
+    }
+
+    return decodedCaptcha;
+  }
+
+  /**
+   * Sends a ReCaptcha v2 and polls for its response
+   *
+   * @param  {Object} options           Parameters for the request
+   * @param  {string} options.googlekey The google key from the ReCaptcha
+   * @param  {string} options.pageurl   The URL where the ReCaptcha is
+   * @return {Promise<Captcha>}         Promise for a Captcha object
+   */
+  async decodeRecaptchaV2(options = {}) {
+    let startedAt = Date.now();
+
+    if (options.googlekey === '') this._throwError('Missing googlekey parameter');
+    if (options.pageurl === '') this._throwError('Missing pageurl parameter');
+
+    let upload_options = {
+      method: 'userrecaptcha',
+      googlekey: options.googlekey,
+      pageurl: options.pageurl
+    };
+
+    let decodedCaptcha = await this._upload(upload_options);
+
+    // Keep pooling untill the answer is ready
+    while (!decodedCaptcha.text) {
+      await this._sleep(Math.max(this.polling, 10)); // Sleep at least 10 seconds
       if (Date.now() - startedAt > this.timeout) {
         this._throwError('Captcha timeout');
         return;
@@ -182,7 +216,7 @@ class TwoCaptchaClient {
    * @param  {Object} options        Parametes for the controlling the requistion
    * @param  {string} options.base64 The base64 encoded image
    * @param  {string} options.method 2Captcha method of image sending. Can be either base64 or multipart
-   * @return {Promise<Captcha>}               Promise for Captcha object containing the captcha ID
+   * @return {Promise<Captcha>}      Promise for Captcha object containing the captcha ID
    */
   async _upload(options = {}) {
     let args = {};

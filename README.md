@@ -37,6 +37,7 @@ The first parameter of the `TwoCaptchaClient` constructor is your API key from
 
 ### 2. Solve a captcha
 
+#### Image captcha
 ```javascript
 client.decode({
   url: 'http://bit.ly/1xXZcKo'
@@ -64,11 +65,28 @@ The returned value will be a `Captcha` object. Its properties are:
 -   `indexes()`: If the captcha sent was tile-like, this function returns the
     indexes of the clicks on an array.
 
+#### ReCaptcha v2
+```javascript
+client.decodeRecaptchaV2({
+  googlekey: 'the_key_extracted from the page',
+  pageurl: 'https://www.google.com/recaptcha/api2/demo'
+}).then(function(response) {
+  console.log(response.text);
+});
+
+>jTfh3o9uqafa-u5RtYofHHo2uDk0T78f78HvttFGYft8pG3wuhd-UHAIy271bQXPeUNRm...
+```
+
+`decodeRecaptchaV2` is an async function. The parameters for `decodeRecaptchaV2`
+function are:
+
+-   `googlekey`: The google key for the ReCaptcha.
+-   `pageurl`: The URL where the ReCaptcha is.
+
 ### 3. Retrieve a previously solved captcha
 
 ```javascript
 // 61086191138 is the ID of a previously sent Captcha
-let captcha;
 client.captcha('61086191138').then(function(response){
   console.log(response);
 });
