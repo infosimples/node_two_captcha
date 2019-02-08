@@ -1,11 +1,15 @@
 {
   "name": "@infosimples/node_two_captcha",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Node.js package for easy integration with 2Captcha API (Captcha Solver as a Service)",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "generate_docs": "npx jsdoc -c ./jsdoc-config.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/infosimples/node_two_captcha"
   },
   "keywords": [
     "api",
