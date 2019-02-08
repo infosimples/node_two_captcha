@@ -12,7 +12,7 @@ Node TwoCaptcha is a Javascript package for 2Captcha -
 Just run:
 
 ```bash
-npm install node_two_captcha
+npm install @infosimples/node_two_captcha
 ```
 
 ## Usage
@@ -21,7 +21,7 @@ npm install node_two_captcha
 
 ```javascript
 // Import module
-const Client = require('node_two_captcha');
+const Client = require('@infosimples/node_two_captcha');
 
 // Declare your client
 client = new Client('your_2captcha_key', {
