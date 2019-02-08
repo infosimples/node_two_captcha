@@ -1,5 +1,9 @@
 # Node TwoCaptcha
 
+[![npm version](https://badge.fury.io/js/%40infosimples%2Fnode_two_captcha.svg)](https://badge.fury.io/js/%40infosimples%2Fnode_two_captcha)
+![](https://img.shields.io/github/license/infosimples/node_two_captcha.svg?style=flat)
+[![Maintainability](https://api.codeclimate.com/v1/badges/78356b38afac3763f1fe/maintainability)](https://codeclimate.com/github/infosimples/node_two_captcha/maintainability)
+
 Node TwoCaptcha is a Javascript package for 2Captcha -
 [2Captcha.com](http://2captcha.com/?from=1025109).
 
