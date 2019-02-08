@@ -32,7 +32,7 @@ The first parameter of the `TwoCaptchaClient` constructor is your API key from
 -   `timeout`: Time (milliseconds) to wait before giving up on waiting for a
     captcha solution.
 -   `polling`: Time (milliseconds) between polls to 2captcha server. 2Captcha
-    documentation suggest this time to be at least 5 seconds, or you might get
+    documentation suggests this time to be at least 5 seconds, or you might get
     blocked.
 -   `throwErrors`: Whether the client should throw errors or just log the errors.
 

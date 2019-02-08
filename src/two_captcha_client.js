@@ -1,14 +1,12 @@
 'use strict';
 const fs = require('fs');
-const {
-  promisify
-} = require('util');
+const {promisify} = require('util');
 
 const Captcha = require('./captcha')
 const constants = require('./constants');
 const HTTPRequest = require('./http_request');
 
-const baseUrl = 'http://2captcha.com/<action>.php';
+const baseUrl = 'https://2captcha.com/<action>.php';
 const readFileAsync = promisify(fs.readFile);
 
 class TwoCaptchaClient {
@@ -38,7 +36,7 @@ class TwoCaptchaClient {
   /**
    * Get balance from your account
    *
-   * @return {Promise<float>} Account balance in USD   
+   * @return {Promise<float>} Account balance in USD
    */
   async balance() {
     let res = await this._request('res', 'get', {
@@ -51,10 +49,10 @@ class TwoCaptchaClient {
    * Gets the response from a solved captcha
    *
    * @param  {string} captchaId The id of the desired captcha
-   * @return {Promise<string>}  A promise for the captcha text string
+   * @return {Promis<Captcha>}  A promise for the captcha
    */
   async captcha(captchaId) {
-    let res = await this._request('res', 'get', {
+    const res = await this._request('res', 'get', {
       id: captchaId,
       action: 'get'
     });
@@ -62,7 +60,6 @@ class TwoCaptchaClient {
     let decodedCaptcha = new Captcha();
     decodedCaptcha.id = captchaId;
     decodedCaptcha.apiResponse = res;
-
     decodedCaptcha.text = res.split('|', 2)[1];
 
     return decodedCaptcha;
@@ -81,17 +78,13 @@ class TwoCaptchaClient {
    * @return {Promise<Captcha>}        Promise for a Captcha object
    */
   async decode(options = {}) {
-    let startedAt = Date.now();
+    const startedAt = Date.now();
 
     if (typeof(this.key) !== 'string') this._throwError('2Captcha key must be a string')
 
     let base64 = await this._loadCaptcha(options);
 
-    let decodedCaptcha = await this._upload({ ...options,
-      ...{
-        base64: base64
-      }
-    });
+    let decodedCaptcha = await this._upload({ ...options, base64: base64});
 
     // Keep pooling untill the answer is ready
     while (!decodedCaptcha.text) {
@@ -149,8 +142,7 @@ class TwoCaptchaClient {
    * 2Captcha service
    */
   async load() {
-    let res = await this._request('load', 'get');
-    return res;
+    return await this._request('load', 'get');
   }
 
   /**
@@ -192,12 +184,7 @@ class TwoCaptchaClient {
       url: baseUrl.replace('<action>', action),
       timeout: this.timeout,
       method: method,
-      payload: { ...payload,
-        ...{
-          key: this.key,
-          soft_id: 2386
-        }
-      }
+      payload: { ...payload, key: this.key, soft_id: 2386 }
     });
 
     this._validateResponse(req);
@@ -217,7 +204,7 @@ class TwoCaptchaClient {
       action: 'reportbad',
       id: captchaId
     });
-    return res == 'OK_REPORT_RECORDED';
+    return res === 'OK_REPORT_RECORDED';
   }
 
   /**
@@ -278,9 +265,7 @@ class TwoCaptchaClient {
     args.method = options.method || 'base64';
 
     // Merge args with any other required field
-    args = { ...options,
-      ...args
-    };
+    args = { ...args, ...options};
 
     // Erase unecessary fields
     delete args.base64;
@@ -300,7 +285,7 @@ class TwoCaptchaClient {
 
   /**
    * Checks if the response from 2Captcha is an Error. It may throw an error if
-   * the class parameter throwExceptions is true. If it is false, ony a warning
+   * the class parameter throwExceptions is true. If it is false, only a warning
    * will be logged.
    *
    * @param  {string} body         Body from the 2Captcha response

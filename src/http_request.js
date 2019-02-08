@@ -1,21 +1,7 @@
 'use strict';
-let axios = require('axios');
+const axios = require('axios');
 const constants = require('./constants');
 const querystring = require('querystring')
-
-const requestUrl = 'http://2captcha.com/in.php?';
-const responseUrl = 'http://2captcha.com/res.php?';
-
-// Uncomment this to log HTTP requests
-// axios.interceptors.request.use(request => {
-//   console.log('Starting Request', request)
-//   return request
-// });
-//
-// axios.interceptors.response.use(response => {
-//   console.log('Response:', response)
-//   return response
-// });
 
 /**
  * Class with static methods used in HTTP requests
@@ -68,14 +54,13 @@ class HTTPRequest {
           break;
         case 'post':
           return await axios.post(url, querystring.stringify(payload), {
-              headers: headers,
-              timeout: timeout
-            }
-          );
+            headers: headers,
+            timeout: timeout
+          });
           break;
         case 'multipart':
           headers['content-type'] = 'multipart/form-data';
-          return await axios.post(url, querystring.stringify(payload),{
+          return await axios.post(url, querystring.stringify(payload), {
             headers: headers,
             timeout: timeout
           });
