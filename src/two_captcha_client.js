@@ -2,7 +2,7 @@
 const fs = require('fs');
 const {promisify} = require('util');
 
-const Captcha = require('./captcha')
+const Captcha = require('./captcha');
 const constants = require('./constants');
 const HTTPRequest = require('./http_request');
 
