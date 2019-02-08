@@ -18,7 +18,7 @@ class HTTPRequest {
   static async openDataURL(url) {
     if (typeof(url) !== 'string') throw new Error('You must inform a string URL');
 
-    let res = await axios.get(url, {
+    const res = await axios.get(url, {
       responseType: 'arraybuffer'
     });
 
