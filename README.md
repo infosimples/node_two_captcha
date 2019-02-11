@@ -15,6 +15,8 @@ Just run:
 npm install @infosimples/node_two_captcha
 ```
 
+JSDoc documentation can be found at https://infosimples.github.io/node_two_captcha/
+
 ## Usage
 
 ### 1. Create a client
