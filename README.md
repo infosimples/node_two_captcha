@@ -117,6 +117,11 @@ client.report('61086191138').then(function(response) {
 > true
 ```
 
+Or send a correct report by setting `bad` parameter to false. Default is true.
+```javascript
+client.report('61086191138', false);
+```
+
 > Warning: do not abuse on this method, otherwise you may get banned
 
 ### 5. Get usage statistics for a specific date
