@@ -1,6 +1,6 @@
 'use strict';
 const fs = require('fs');
-const {promisify} = require('util');
+const { promisify } = require('util');
 
 const Captcha = require('./captcha');
 const constants = require('./constants');
@@ -30,7 +30,7 @@ class TwoCaptchaClient {
     this.polling = polling;
     this.throwErrors = throwErrors;
 
-    if (typeof(key) !== 'string') this._throwError('2Captcha key must be a string');
+    if (typeof (key) !== 'string') this._throwError('2Captcha key must be a string');
   }
 
   /**
@@ -80,11 +80,11 @@ class TwoCaptchaClient {
   async decode(options = {}) {
     const startedAt = Date.now();
 
-    if (typeof(this.key) !== 'string') this._throwError('2Captcha key must be a string')
+    if (typeof (this.key) !== 'string') this._throwError('2Captcha key must be a string')
 
     let base64 = await this._loadCaptcha(options);
 
-    let decodedCaptcha = await this._upload({ ...options, base64: base64});
+    let decodedCaptcha = await this._upload({ ...options, base64: base64 });
 
     // Keep pooling untill the answer is ready
     while (!decodedCaptcha.text) {
@@ -196,12 +196,13 @@ class TwoCaptchaClient {
    * Report incorrectly solved captcha for refund
    *
    * @param  {string} captchaId The id of the incorrectly solved captcha
+   * @param {boolean} bad If reporting an incorrectly solved captcha. Default is true.
    * @return {Promise<Boolean>} Promise for a boolean informing if the report
    * was received
    */
-  async report(captchaId) {
+  async report(captchaId, bad = true) {
     let res = await this._request('res', 'get', {
-      action: 'reportbad',
+      action: bad ? 'reportbad' : 'reportgood',
       id: captchaId
     });
     return res === 'OK_REPORT_RECORDED';
@@ -265,7 +266,7 @@ class TwoCaptchaClient {
     args.method = options.method || 'base64';
 
     // Merge args with any other required field
-    args = { ...args, ...options};
+    args = { ...args, ...options };
 
     // Erase unecessary fields
     delete args.base64;
