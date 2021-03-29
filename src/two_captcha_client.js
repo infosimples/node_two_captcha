@@ -102,10 +102,12 @@ class TwoCaptchaClient {
   /**
    * Sends a ReCaptcha v2 and polls for its response
    *
-   * @param  {Object} options           Parameters for the request
-   * @param  {string} options.googlekey The google key from the ReCaptcha
-   * @param  {string} options.pageurl   The URL where the ReCaptcha is
-   * @return {Promise<Captcha>}         Promise for a Captcha object
+   * @param  {Object}  options            Parameters for the request
+   * @param  {string}  options.googlekey  The google key from the ReCaptcha
+   * @param  {string}  options.pageurl    The URL where the ReCaptcha is
+   * @param  {boolean} options.invisible  Invisible ReCaptcha switch
+   * @param  {boolean} options.enterprise Enterprise ReCaptcha switch
+   * @return {Promise<Captcha>}           Promise for a Captcha object
    */
   async decodeRecaptchaV2(options = {}) {
     let startedAt = Date.now();
@@ -116,7 +118,49 @@ class TwoCaptchaClient {
     let upload_options = {
       method: 'userrecaptcha',
       googlekey: options.googlekey,
-      pageurl: options.pageurl
+      pageurl: options.pageurl,
+      invisible: options.invisible ? 1 : 0,
+      enterprise: options.enterprise ? 1 : 0,
+    };
+
+    let decodedCaptcha = await this._upload(upload_options);
+
+    // Keep pooling untill the answer is ready
+    while (!decodedCaptcha.text) {
+      await this._sleep(Math.max(this.polling, 10)); // Sleep at least 10 seconds
+      if (Date.now() - startedAt > this.timeout) {
+        this._throwError('Captcha timeout');
+        return;
+      }
+      decodedCaptcha = await this.captcha(decodedCaptcha.id);
+    }
+
+    return decodedCaptcha;
+  }
+
+  /**
+     * Sends a ReCaptcha v3 and polls for its response
+     *
+     * @param  {Object} options             Parameters for the request
+     * @param  {string} options.googlekey   The google key from the ReCaptcha
+     * @param  {string} options.pageurl     The URL where the ReCaptcha is
+     * @param  {string} options.action      Action value for ReCaptcha
+     * @param  {boolean} options.enterprise Enterprise ReCaptcha switch
+     * @return {Promise<Captcha>}           Promise for a Captcha object
+     */
+  async decodeRecaptchaV3(options = {}) {
+    let startedAt = Date.now();
+
+    if (options.googlekey === '') this._throwError('Missing googlekey parameter');
+    if (options.pageurl === '') this._throwError('Missing pageurl parameter');
+
+    let upload_options = {
+      method: 'userrecaptcha',
+      googlekey: options.googlekey,
+      pageurl: options.pageurl,
+      version: 'v3',
+      action: options.action ? options.action : '',
+      enterprise: options.enterprise ? 1 : 0,
     };
 
     let decodedCaptcha = await this._upload(upload_options);
