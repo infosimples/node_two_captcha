@@ -77,7 +77,7 @@ The returned value will be a `Captcha` object. Its properties are:
 
 ```javascript
 client.decodeRecaptchaV2({
-  googlekey: 'the_key_extracted from the page',
+  googlekey: 'the_key_extracted_from_the_page',
   pageurl: 'https://www.google.com/recaptcha/api2/demo'
 }).then(function(response) {
   console.log(response.text);
@@ -91,6 +91,30 @@ function are:
 
 -   `googlekey`: The google key for the ReCaptcha.
 -   `pageurl`: The URL where the ReCaptcha is.
+-   `invisible`: optional (Boolean) switch for invisible ReCaptcha, default is `false`
+-   `enterprise`: optional (Boolean) switch for ReCaptcha Enterprise, default is `false`
+
+#### ReCaptcha v3
+
+```javascript
+client.decodeRecaptchaV3({
+  googlekey: 'the_key_extracted_from_the_page',
+  pageurl: 'https://www.site.with.recaptcha.v3/example',
+  action: 'test'
+}).then(function(response) {
+  console.log(response.text);
+});
+
+>jTfh3o9uqafa-u5RtYofHHo2uDk0T78f78HvttFGYft8pG3wuhd-UHAIy271bQXPeUNRm...
+```
+
+`decodeRecaptchaV3` is an async function. The parameters for `decodeRecaptchaV3`
+function are:
+
+-   `googlekey`: The google key for the ReCaptcha.
+-   `pageurl`: The URL where the ReCaptcha is.
+-   `action`: the action value used by the captcha.
+-   `enterprise`: optional (Boolean) switch for ReCaptcha Enterprise, default is `false`
 
 ### 3. Retrieve a previously solved captcha
 

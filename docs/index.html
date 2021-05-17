@@ -26,7 +26,7 @@
     
 
 
-    <h3> </h3>
+    <h3>@infosimples/node_two_captcha 1.1.0</h3>
 
 
 
@@ -43,21 +43,29 @@
 
 
     <section>
-        <article><h1>Node TwoCaptcha</h1><p><a href="https://badge.fury.io/js/%40infosimples%2Fnode_two_captcha"><img src="https://badge.fury.io/js/%40infosimples%2Fnode_two_captcha.svg" alt="npm version"></a>
+        <article><h1>Node TwoCaptcha</h1>
+<p><a href="https://badge.fury.io/js/%40infosimples%2Fnode_two_captcha"><img src="https://badge.fury.io/js/%40infosimples%2Fnode_two_captcha.svg" alt="npm version"></a>
 <img src="https://img.shields.io/github/license/infosimples/node_two_captcha.svg?style=flat" alt="">
 <a href="https://codeclimate.com/github/infosimples/node_two_captcha/maintainability"><img src="https://api.codeclimate.com/v1/badges/78356b38afac3763f1fe/maintainability" alt="Maintainability"></a></p>
 <p>Node TwoCaptcha is a Javascript package for 2Captcha -
 <a href="http://2captcha.com/?from=1025109">2Captcha.com</a>.</p>
-<h2>Installation</h2><p>Just run:</p>
-<pre class="prettyprint source"><code>npm install @infosimples/node_two_captcha</code></pre><p>JSDoc documentation can be found at https://infosimples.github.io/node_two_captcha/</p>
-<h2>Usage</h2><h3>1. Create a client</h3><pre class="prettyprint source lang-javascript"><code>// Import module
+<h2>Installation</h2>
+<p>Just run:</p>
+<pre class="prettyprint source lang-bash"><code>npm install @infosimples/node_two_captcha
+</code></pre>
+<p>JSDoc documentation can be found at https://infosimples.github.io/node_two_captcha/</p>
+<h2>Usage</h2>
+<h3>1. Create a client</h3>
+<pre class="prettyprint source lang-javascript"><code>// Import module
 const Client = require('@infosimples/node_two_captcha');
 
 // Declare your client
 client = new Client('your_2captcha_key', {
                     timeout: 60000,
                     polling: 5000,
-                    throwErrors: false});</code></pre><p>The first parameter of the <code>TwoCaptchaClient</code> constructor is your API key from
+                    throwErrors: false});
+</code></pre>
+<p>The first parameter of the <code>TwoCaptchaClient</code> constructor is your API key from
 2Captcha. The other parameters are:</p>
 <ul>
 <li><code>timeout</code>: Time (milliseconds) to wait before giving up on waiting for a
@@ -67,13 +75,17 @@ documentation suggests this time to be at least 5 seconds, or you might get
 blocked.</li>
 <li><code>throwErrors</code>: Whether the client should throw errors or just log the errors.</li>
 </ul>
-<h3>2. Solve a captcha</h3><h4>Image captcha</h4><pre class="prettyprint source lang-javascript"><code>client.decode({
+<h3>2. Solve a captcha</h3>
+<h4>Image captcha</h4>
+<pre class="prettyprint source lang-javascript"><code>client.decode({
   url: 'http://bit.ly/1xXZcKo'
 }).then(function(response) {
   console.log(response.text);
 });
 
-> infosimples</code></pre><p><code>decode</code> is an async function. Valid parameters for <code>decode</code> function are:</p>
+> infosimples
+</code></pre>
+<p><code>decode</code> is an async function. Valid parameters for <code>decode</code> function are:</p>
 <ul>
 <li><code>base64</code>: An already base64-coded image.</li>
 <li><code>buffer</code>: A buffer object of a binary image.</li>
@@ -90,20 +102,45 @@ coordinates (X, Y) clicked.</li>
 <li><code>indexes()</code>: If the captcha sent was tile-like, this function returns the
 indexes of the clicks on an array.</li>
 </ul>
-<h4>ReCaptcha v2</h4><pre class="prettyprint source lang-javascript"><code>client.decodeRecaptchaV2({
-  googlekey: 'the_key_extracted from the page',
+<h4>ReCaptcha v2</h4>
+<pre class="prettyprint source lang-javascript"><code>client.decodeRecaptchaV2({
+  googlekey: 'the_key_extracted_from_the_page',
   pageurl: 'https://www.google.com/recaptcha/api2/demo'
 }).then(function(response) {
   console.log(response.text);
 });
 
->jTfh3o9uqafa-u5RtYofHHo2uDk0T78f78HvttFGYft8pG3wuhd-UHAIy271bQXPeUNRm...</code></pre><p><code>decodeRecaptchaV2</code> is an async function. The parameters for <code>decodeRecaptchaV2</code>
+>jTfh3o9uqafa-u5RtYofHHo2uDk0T78f78HvttFGYft8pG3wuhd-UHAIy271bQXPeUNRm...
+</code></pre>
+<p><code>decodeRecaptchaV2</code> is an async function. The parameters for <code>decodeRecaptchaV2</code>
 function are:</p>
 <ul>
 <li><code>googlekey</code>: The google key for the ReCaptcha.</li>
 <li><code>pageurl</code>: The URL where the ReCaptcha is.</li>
+<li><code>invisible</code>: optional (Boolean) switch for invisible ReCaptcha, default is <code>false</code></li>
+<li><code>enterprise</code>: optional (Boolean) switch for ReCaptcha Enterprise, default is <code>false</code></li>
 </ul>
-<h3>3. Retrieve a previously solved captcha</h3><pre class="prettyprint source lang-javascript"><code>// 61086191138 is the ID of a previously sent Captcha
+<h4>ReCaptcha v3</h4>
+<pre class="prettyprint source lang-javascript"><code>client.decodeRecaptchaV3({
+  googlekey: 'the_key_extracted_from_the_page',
+  pageurl: 'https://www.site.with.recaptcha.v3/example',
+  action: 'test'
+}).then(function(response) {
+  console.log(response.text);
+});
+
+>jTfh3o9uqafa-u5RtYofHHo2uDk0T78f78HvttFGYft8pG3wuhd-UHAIy271bQXPeUNRm...
+</code></pre>
+<p><code>decodeRecaptchaV3</code> is an async function. The parameters for <code>decodeRecaptchaV3</code>
+function are:</p>
+<ul>
+<li><code>googlekey</code>: The google key for the ReCaptcha.</li>
+<li><code>pageurl</code>: The URL where the ReCaptcha is.</li>
+<li><code>action</code>: the action value used by the captcha.</li>
+<li><code>enterprise</code>: optional (Boolean) switch for ReCaptcha Enterprise, default is <code>false</code></li>
+</ul>
+<h3>3. Retrieve a previously solved captcha</h3>
+<pre class="prettyprint source lang-javascript"><code>// 61086191138 is the ID of a previously sent Captcha
 client.captcha('61086191138').then(function(response){
   console.log(response);
 });
@@ -111,26 +148,39 @@ client.captcha('61086191138').then(function(response){
 > Captcha {
    _id: '61086191138',
    _apiResponse: 'OK|infosimples',
-   _text: 'infosimples' }</code></pre><h3>4. Report incorrectly solved captcha for refund</h3><pre class="prettyprint source lang-javascript"><code>client.report('61086191138').then(function(response) {
+   _text: 'infosimples' }
+</code></pre>
+<h3>4. Report incorrectly solved captcha for refund</h3>
+<pre class="prettyprint source lang-javascript"><code>client.report('61086191138').then(function(response) {
   console.log(response);
 });
 
 // Returns whether the report was received or not
-> true</code></pre><blockquote>
+> true
+</code></pre>
+<p>Or send a correct report by setting <code>bad</code> parameter to false. Default is true.</p>
+<pre class="prettyprint source lang-javascript"><code>client.report('61086191138', false);
+</code></pre>
+<blockquote>
 <p>Warning: do not abuse on this method, otherwise you may get banned</p>
 </blockquote>
-<h3>5. Get usage statistics for a specific date</h3><pre class="prettyprint source lang-javascript"><code>let date = new Date('2019-02-04');
+<h3>5. Get usage statistics for a specific date</h3>
+<pre class="prettyprint source lang-javascript"><code>let date = new Date('2019-02-04');
 client.stats(date).then(function(response) {
   console.log(response);
 });
 
 // Returns an XML string with your usage statistics
-> &lt;?xml version=&quot;1.0&quot;?>&lt;response>&lt;stats dateint=&quot;1549227600&quot; date=&quot;2019-02-04&quot; hour=&quot;00&quot;>&lt;volume>0&lt;/volume>&lt;money>0&lt;/money>&lt;/stats>&lt;stats dateint=&quot;1549231200&quot; date=&quot;2019-02-04&quot; hour=&quot;01&quot;>&lt;volume>0&lt;/volume>&lt;money>0&lt;/money>&lt;/stats>...</code></pre><h3>6. Get your 2Captcha account balance</h3><pre class="prettyprint source lang-javascript"><code>client.balance().then(function(response) {
+> &lt;?xml version=&quot;1.0&quot;?>&lt;response>&lt;stats dateint=&quot;1549227600&quot; date=&quot;2019-02-04&quot; hour=&quot;00&quot;>&lt;volume>0&lt;/volume>&lt;money>0&lt;/money>&lt;/stats>&lt;stats dateint=&quot;1549231200&quot; date=&quot;2019-02-04&quot; hour=&quot;01&quot;>&lt;volume>0&lt;/volume>&lt;money>0&lt;/money>&lt;/stats>...
+</code></pre>
+<h3>6. Get your 2Captcha account balance</h3>
+<pre class="prettyprint source lang-javascript"><code>client.balance().then(function(response) {
   console.log(response);
 });
 
 // Returns a float with your account balance in USD
-> 3.75371</code></pre></article>
+> 3.75371
+</code></pre></article>
     </section>
 
 
@@ -147,7 +197,7 @@ client.stats(date).then(function(response) {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Feb 11 2019 10:38:09 GMT-0200 (Brasilia Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Mon May 17 2021 19:14:49 GMT-0300 (Brasilia Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>
