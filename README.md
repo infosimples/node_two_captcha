@@ -77,7 +77,7 @@ The returned value will be a `Captcha` object. Its properties are:
 
 ```javascript
 client.decodeRecaptchaV2({
-  googlekey: 'the_key_extracted from the page',
+  googlekey: 'the_key_extracted_from_the_page',
   pageurl: 'https://www.google.com/recaptcha/api2/demo'
 }).then(function(response) {
   console.log(response.text);
@@ -98,8 +98,8 @@ function are:
 
 ```javascript
 client.decodeRecaptchaV3({
-  googlekey: 'the_key_extracted from the page',
-  pageurl: 'https://www.google.com/recaptcha/api2/demo',
+  googlekey: 'the_key_extracted_from_the_page',
+  pageurl: 'https://www.site.with.recaptcha.v3/example',
   action: 'test'
 }).then(function(response) {
   console.log(response.text);
