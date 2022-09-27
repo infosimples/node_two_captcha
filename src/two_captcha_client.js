@@ -178,6 +178,14 @@ class TwoCaptchaClient {
     return decodedCaptcha;
   }
 
+    /**
+   * Sends a HCaptcha and polls for its response
+   *
+   * @param  {Object} options             Parameters for the request
+   * @param  {string} options.sitekey     The site key from the HCaptcha
+   * @param  {string} options.pageurl     The URL where the HCaptcha is
+   * @return {Promise<Captcha>}           Promise for a Captcha object
+  */
   async decodeHCaptcha(options = {}) {
     let startedAt = Date.now();
 
@@ -201,6 +209,8 @@ class TwoCaptchaClient {
       }
       decodedCaptcha = await this.captcha(decodedCaptcha.id);
     }
+
+    return decodedCaptcha;
   }
 
   /**
