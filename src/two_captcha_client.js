@@ -178,6 +178,31 @@ class TwoCaptchaClient {
     return decodedCaptcha;
   }
 
+  async decodeHCaptcha(options = {}) {
+    let startedAt = Date.now();
+
+    if (options.sitekey === '') this._throwError('Missing sitekey parameter');
+    if (options.pageurl === '') this._throwError('Missing pageurl parameter');
+
+    let upload_options = {
+      method: 'hcaptcha',
+      sitekey: options.sitekey,
+      pageurl: options.pageurl,
+    };
+
+    let decodedCaptcha = await this._upload(upload_options);
+
+    // Keep pooling untill the answer is ready
+    while (!decodedCaptcha.text) {
+      await this._sleep(Math.max(this.polling, 10)); // Sleep at least 10 seconds
+      if (Date.now() - startedAt > this.timeout) {
+        this._throwError('Captcha timeout');
+        return;
+      }
+      decodedCaptcha = await this.captcha(decodedCaptcha.id);
+    }
+  }
+
   /**
    * @deprecated /load.php route is returning error 500
    * Get current load from 2Captcha service
