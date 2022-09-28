@@ -116,7 +116,7 @@ function are:
 -   `action`: the action value used by the captcha.
 -   `enterprise`: optional (Boolean) switch for ReCaptcha Enterprise, default is `false`
 
-#### HCaptcha
+#### hCaptcha
 
 ```javascript
 client.decodeHCaptcha({
@@ -129,7 +129,7 @@ client.decodeHCaptcha({
 >P0_eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNza2V5IjoiczhYam4vKzZnb...
 ```
 
-`HCaptcha` is an async function. The parameters for `HCaptcha`
+`decodeHCaptcha` is an async function. The parameters for `decodeHCaptcha`
 function are:
 
 -   `sitekey`: The site key for the HCaptcha.
