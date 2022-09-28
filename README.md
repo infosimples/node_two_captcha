@@ -116,6 +116,25 @@ function are:
 -   `action`: the action value used by the captcha.
 -   `enterprise`: optional (Boolean) switch for ReCaptcha Enterprise, default is `false`
 
+#### HCaptcha
+
+```javascript
+client.decodeHCaptcha({
+  sitekey: 'the_key_extracted_from_the_page',
+  pageurl: 'https://www.site.with.hcaptcha/example',
+}).then(function(response) {
+  console.log(response.text);
+});
+
+>P0_eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNza2V5IjoiczhYam4vKzZnb...
+```
+
+`HCaptcha` is an async function. The parameters for `HCaptcha`
+function are:
+
+-   `sitekey`: The site key for the HCaptcha.
+-   `pageurl`: The URL where the HCaptcha is.
+
 ### 3. Retrieve a previously solved captcha
 
 ```javascript
