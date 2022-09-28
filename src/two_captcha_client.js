@@ -178,12 +178,13 @@ class TwoCaptchaClient {
     return decodedCaptcha;
   }
 
-    /**
-   * Sends a HCaptcha and polls for its response
+  /**
+   * Sends a hCaptcha and polls for its response
    *
    * @param  {Object} options             Parameters for the request
-   * @param  {string} options.sitekey     The site key from the HCaptcha
-   * @param  {string} options.pageurl     The URL where the HCaptcha is
+   * @param  {string} options.sitekey     The site key of the hCaptcha
+   * @param  {string} options.pageurl     The URL where the hCaptcha is
+   * @param  {boolean} options.invisible  Invisible hCaptcha
    * @return {Promise<Captcha>}           Promise for a Captcha object
   */
   async decodeHCaptcha(options = {}) {
@@ -196,6 +197,7 @@ class TwoCaptchaClient {
       method: 'hcaptcha',
       sitekey: options.sitekey,
       pageurl: options.pageurl,
+      invisible: options.invisible ? 1 : 0,
     };
 
     let decodedCaptcha = await this._upload(upload_options);
