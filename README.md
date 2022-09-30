@@ -35,16 +35,16 @@ client = new Client('your_2captcha_key', {
 The first parameter of the `TwoCaptchaClient` constructor is your API key from
 2Captcha. The other parameters are:
 
--   `timeout`: Time (milliseconds) to wait before giving up on waiting for a
+- `timeout`: Time (milliseconds) to wait before giving up on waiting for a
     captcha solution.
--   `polling`: Time (milliseconds) between polls to 2captcha server. 2Captcha
+- `polling`: Time (milliseconds) between polls to 2captcha server. 2Captcha
     documentation suggests this time to be at least 5 seconds, or you might get
     blocked.
--   `throwErrors`: Whether the client should throw errors or just log the errors.
+- `throwErrors`: Whether the client should throw errors or just log the errors.
 
-### 2. Solve a captcha
+### 2. Solve a CAPTCHA
 
-#### Image captcha
+#### Image CAPTCHA
 
 ```javascript
 client.decode({
@@ -58,22 +58,22 @@ client.decode({
 
 `decode` is an async function. Valid parameters for `decode` function are:
 
--   `base64`: An already base64-coded image.
--   `buffer`: A buffer object of a binary image.
--   `path`: The path for a system-stored image.
--   `url`: Url for a web-located image.
+- `base64`: An already base64-coded image.
+- `buffer`: A buffer object of a binary image.
+- `path`: The path for a system-stored image.
+- `url`: Url for a web-located image.
 
 The returned value will be a `Captcha` object. Its properties are:
 
--   `apiResponse`: Complete API response body for captcha request.
--   `id`: Captcha ID, as provided from 2Captcha.
--   `text`: Text from captcha.
--   `coordinates()`: If the captcha sent was a image, this function returns the
+- `apiResponse`: Complete API response body for captcha request.
+- `id`: Captcha ID, as provided from 2Captcha.
+- `text`: Text from captcha.
+- `coordinates()`: If the captcha sent was a image, this function returns the
     coordinates (X, Y) clicked.
--   `indexes()`: If the captcha sent was tile-like, this function returns the
+- `indexes()`: If the captcha sent was tile-like, this function returns the
     indexes of the clicks on an array.
 
-#### ReCaptcha v2
+#### reCAPTCHA v2
 
 ```javascript
 client.decodeRecaptchaV2({
@@ -83,18 +83,18 @@ client.decodeRecaptchaV2({
   console.log(response.text);
 });
 
->jTfh3o9uqafa-u5RtYofHHo2uDk0T78f78HvttFGYft8pG3wuhd-UHAIy271bQXPeUNRm...
+> jTfh3o9uqafa-u5RtYofHHo2uDk0T78f78HvttFGYft8pG3wuhd-UHAIy271bQXPeUNRm...
 ```
 
 `decodeRecaptchaV2` is an async function. The parameters for `decodeRecaptchaV2`
 function are:
 
--   `googlekey`: The google key for the ReCaptcha.
--   `pageurl`: The URL where the ReCaptcha is.
--   `invisible`: optional (Boolean) switch for invisible ReCaptcha, default is `false`
--   `enterprise`: optional (Boolean) switch for ReCaptcha Enterprise, default is `false`
+- `googlekey`: The Google key for the reCAPTCHA.
+- `pageurl`: The URL of the page with the reCAPTCHA challenge.
+- `invisible`: optional (Boolean) switch for invisible reCAPTCHA, default is `false`
+- `enterprise`: optional (Boolean) switch for reCAPTCHA Enterprise, default is `false`
 
-#### ReCaptcha v3
+#### reCAPTCHA v3
 
 ```javascript
 client.decodeRecaptchaV3({
@@ -105,16 +105,16 @@ client.decodeRecaptchaV3({
   console.log(response.text);
 });
 
->jTfh3o9uqafa-u5RtYofHHo2uDk0T78f78HvttFGYft8pG3wuhd-UHAIy271bQXPeUNRm...
+> jTfh3o9uqafa-u5RtYofHHo2uDk0T78f78HvttFGYft8pG3wuhd-UHAIy271bQXPeUNRm...
 ```
 
 `decodeRecaptchaV3` is an async function. The parameters for `decodeRecaptchaV3`
 function are:
 
--   `googlekey`: The google key for the ReCaptcha.
--   `pageurl`: The URL where the ReCaptcha is.
--   `action`: the action value used by the captcha.
--   `enterprise`: optional (Boolean) switch for ReCaptcha Enterprise, default is `false`
+- `googlekey`: The Google key for the reCAPTCHA.
+- `pageurl`: The URL of the page with the reCAPTCHA challenge.
+- `action`: the action name used by the CAPTCHA.
+- `enterprise`: optional (Boolean) switch for reCAPTCHA Enterprise, default is `false`
 
 #### hCaptcha
 
@@ -126,21 +126,21 @@ client.decodeHCaptcha({
   console.log(response.text);
 });
 
->P0_eyJ0eXAiIoJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNza2V5IjoiczHiam4vKzZnb...
+> P0_eyJ0eXAiIoJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNza2V5IjoiczHiam4vKzZnb...
 ```
 
 `decodeHCaptcha` is an async function. The parameters for `decodeHCaptcha`
 function are:
 
--   `sitekey`: The site key for the hCaptcha.
--   `pageurl`: The URL where the hCaptcha is.
--   `invisible`: optional (Boolean) switch for invisible ReCaptcha, default
+- `sitekey`: The site key for the hCaptcha.
+- `pageurl`: The URL of the page with the hCaptcha challenge.
+- `invisible`: optional (Boolean) switch for invisible hCaptcha, default
     is `false`.
 
 ### 3. Retrieve a previously solved captcha
 
 ```javascript
-// 61086191138 is the ID of a previously sent Captcha
+// 61086191138 is the ID of a previously sent CAPTCHA
 client.captcha('61086191138').then(function(response){
   console.log(response);
 });
@@ -151,7 +151,7 @@ client.captcha('61086191138').then(function(response){
    _text: 'infosimples' }
 ```
 
-### 4. Report incorrectly solved captcha for refund
+### 4. Report an incorrectly solved CATPCHA for a refund
 
 ```javascript
 client.report('61086191138').then(function(response) {
@@ -162,12 +162,13 @@ client.report('61086191138').then(function(response) {
 > true
 ```
 
-Or send a correct report by setting `bad` parameter to false. Default is true.
+Or send a correct report by setting `bad` parameter to false. Default is `true`.
+
 ```javascript
 client.report('61086191138', false);
 ```
 
-> Warning: do not abuse on this method, otherwise you may get banned
+> **Warning:** *abusing on this method may get you banned.*
 
 ### 5. Get usage statistics for a specific date
 
