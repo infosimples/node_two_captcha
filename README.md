@@ -32,6 +32,12 @@ client = new Client('your_2captcha_key', {
                     throwErrors: false});
 ```
 
+.. or using ES6
+
+```javascript
+import Client from '@infosimples/node_two_captcha';
+```
+
 The first parameter of the `TwoCaptchaClient` constructor is your API key from
 2Captcha. The other parameters are:
 
@@ -52,6 +58,18 @@ client.decode({
 }).then(function(response) {
   console.log(response.text);
 });
+
+> infosimples
+```
+
+.. or using async/await
+
+```javascript
+const solved = await client.decode({
+  url: 'http://bit.ly/1xXZcKo'
+})
+
+console.log(solved.text);
 
 > infosimples
 ```
